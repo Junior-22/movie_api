@@ -17,7 +17,12 @@
   },
   "homepage": "https://github.com/Junior-22/movie_api#readme",
   "dependencies": {
+    "@types/express": "^4.17.13",
+    "@types/method-override": "^0.0.32",
+    "@types/morgan": "^1.9.3",
     "body-parser": "^1.20.0",
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0"
   }
 }
