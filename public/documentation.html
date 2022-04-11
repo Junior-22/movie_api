@@ -2,10 +2,23 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8" />
-    <title>Documentation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Movie API</title>
   </head>
-  <body>
-    <h1>Movie App API</h1>
+
+  <body class="container text-center">
+    <h2>Documentation</h2>
 
     <p>
       This movie API will give users access to information about their favourite
@@ -13,5 +26,131 @@
       a profile, update their personal information and create a list of their
       favourite movies or actors.
     </p>
+
+    <h3>Here you can find information on how to utilize the API</h3>
+
+    <table class="table table-bordered table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Business Logic</th>
+          <th scope="col">URL Endpoint</th>
+          <th scope="col">HTTP Method</th>
+          <th scope="col">Query Parameters</th>
+          <th scope="col">Request Data Body Format</th>
+          <th scope="col">Response Data Body Format</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <th scope="row">Return a list of ALL movies to the user</th>
+          <td>/movies</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>
+            JSON object with data about all movies: <br />Array of: {"title":
+            "Title of the movie", "year": "year of release", "genre": "Genre of
+            the movie", "director": "Name of the director", "actors": "name of
+            actors"}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Return movie by title</th>
+          <td>/movies/:title</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>
+            JSON object with data about all movies: <br />Array of: {"title":
+            "Title of the movie", "year": "year of release", "genre": "Genre of
+            the movie", "director": "Name of the director", "actors": "name of
+            actors"}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Return movie by genre</th>
+          <td>/movies/genre/:genreName</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>
+            JSON object with data about all movies: <br />Array of: {"title":
+            "Title of the movie", "year": "year of release", "genre": "Genre of
+            the movie", "director": "Name of the director", "actors": "name of
+            actors"}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Return movie by director</th>
+          <td>/movies/director/:directorName</td>
+          <td>GET</td>
+          <td>None</td>
+          <td>None</td>
+          <td>
+            JSON object with data about all movies: <br />Array of: {"title":
+            "Title of the movie", "year": "year of release", "genre": "Genre of
+            the movie", "director": "Name of the director", "actors": "name of
+            actors"}
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Allow new users to register</th>
+          <td>/users/register</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>
+            JSON object with data to register. <br />{"name": "name of the
+            user", "birthday": "day of birth", "username": "username chosen by
+            the user", "email": "user's email address" }
+          </td>
+          <td>
+            JSON object sent with registered data plus an additional random
+            unique ID value recorded.
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">Allow users to update their user info (username)</th>
+          <td>/users/:userName</td>
+          <td>PUT</td>
+          <td>None</td>
+          <td>None</td>
+          <td>A text message confirming the update</td>
+        </tr>
+        <tr>
+          <th scope="row">Allow existing users to deregister</th>
+          <td>/users/:userName</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>None</td>
+          <td>A text message confirming the delete</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            Allow users to add a movie to their list of favorites
+          </th>
+          <td>/users/:userName/favourites</td>
+          <td>POST</td>
+          <td>None</td>
+          <td>
+            JSON object with info about movie to add to favourites list<br />
+            Array of: {"title": "Title of the movie", "year": "year of release",
+            "genre": "Genre of the movie", "director": "Name of the director",
+            "actors": "name of actors"}
+          </td>
+          <td>Message confirming</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            Allow users to remove a movie from their list of favorites
+          </th>
+          <td>/users/:userName/favourites</td>
+          <td>DELETE</td>
+          <td>None</td>
+          <td>None</td>
+          <td>Message confirming</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
