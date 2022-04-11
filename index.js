@@ -21,6 +21,8 @@ let movies = [
   {
     title: "Malcolm X",
     year: "1992",
+    description:
+      "Biographical epic of the controversial and influential Black Nationalist leader, from his early life and career as a small-time gangster, to his ministry as a member of the Nation of Islam.",
     genre: { Name: "Drama" },
     director: "Spike Lee",
     actors:
@@ -29,6 +31,8 @@ let movies = [
   {
     title: "Furious 7",
     year: "2015",
+    description:
+      "Dominic Toretto, Brian O'Conner, and the rest of their team have returned to the United States to live normal lives after securing amnesty for their past crimes, until Deckard Shaw, a rogue special forces assassin seeking to avenge his comatose younger brother, puts the team in danger once again.",
     genre: { Name: "Adventure" },
     director: "James Wan",
     actors:
@@ -37,6 +41,8 @@ let movies = [
   {
     title: "The Old Guard",
     year: "2020",
+    description:
+      "A covert team of immortal mercenaries is suddenly exposed and must now fight to keep their identity a secret just as an unexpected new member is discovered.",
     genre: { Name: "Action" },
     director: "Gina Prince-Bythewood",
     actors:
@@ -45,6 +51,8 @@ let movies = [
   {
     title: "Avengers: Endgame",
     year: "2019",
+    description:
+      "twenty-three days after Thanos killed half of all life in the universe, Carol Danvers rescues Tony Stark and Nebula from deep space and they reunite with the remaining Avengers",
     genre: { Name: "Action" },
     director: "Anthony Russo, Joe Russo",
     actors:
@@ -53,6 +61,8 @@ let movies = [
   {
     title: "Black Panther",
     year: "2018",
+    description:
+      "After the death of his father, T'Challa returns home to the African nation of Wakanda to take his rightful place as king.",
     genre: { Name: "Adventure" },
     director: "Ryan Coogler",
     actors:
@@ -61,6 +71,8 @@ let movies = [
   {
     title: "John Wick",
     year: "2014",
+    description:
+      "John is a legendary hitman who had retired until a gang invades his house, steals his car, and kills the puppy that his late wife Helen had given him.",
     genre: { Name: "Thriller" },
     director: "Chad Stahelski",
     actors:
@@ -69,30 +81,18 @@ let movies = [
   {
     title: "Wonder Woman 1984",
     year: "2020",
+    description:
+      "Set in 1984 during the Cold War, the film follows Diana and her past love Steve Trevor as they face off against Maxwell Lord and Cheetah.",
     genre: { Name: "Fantasy" },
     director: "Patty Jenkins",
     actors:
       "Gal Gadot, Chris Pine, Kristen Wiig, Pedro Pascal, Natasha Rothwell, Lynda Carter, Ravi Patel"
   },
   {
-    title: "The Lucky One",
-    year: "2012",
-    genre: { Name: "Romance" },
-    director: "Scott Hicks",
-    actors:
-      "Zack Efron, Taylor Schilling, Blythe Danner, Victor Hayes, Sharon Conley, Joe Chrest"
-  },
-  {
-    title: "Baywatch",
-    year: "2017",
-    genre: { Name: "Comedy" },
-    director: "Seth Gordon",
-    actors:
-      "Dwayne Johnson, Zack Efron, Kelly Rohrbach, Alexandra Daddario, Priyanka Chopra, David Hasselhoff, Hannibal Buress"
-  },
-  {
     title: "Fences",
     year: "2016",
+    description:
+      "a film about an emotionally damaged man who struggles with his past while at the same time trying to provide for his family.",
     genre: { Name: "Drama" },
     director: "Denzel Washington",
     actors:
@@ -101,6 +101,8 @@ let movies = [
   {
     title: "The Magnificent Seven",
     year: "2016",
+    description:
+      "Seven gunmen from a variety of backgrounds are brought together by a vengeful young widow to protect her town from the private army of a destructive industrialist.",
     genre: { Name: "Action" },
     director: "Antoine Fuqua",
     actors:
@@ -109,6 +111,8 @@ let movies = [
   {
     title: "Aquaman",
     year: "2018",
+    description:
+      "A half-Atlantean, half-human who is reluctant to be king of the undersea nation of Atlantis. He is a member of the Justice League.",
     genre: { Name: "Fantasy" },
     director: "James Wan",
     actors:
@@ -117,6 +121,8 @@ let movies = [
   {
     title: "The Equalizer",
     year: "2014",
+    description:
+      "A man who believes he has put his mysterious past behind him cannot stand idly by when he meets a young girl under the control of ultra-violent Russian gangsters.",
     genre: { Name: "Thriller" },
     director: "Antoine Fuqua",
     actors:
