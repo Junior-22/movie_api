@@ -92,7 +92,7 @@ let movies = [
     title: "Fences",
     year: "2016",
     description:
-      "a film about an emotionally damaged man who struggles with his past while at the same time trying to provide for his family.",
+      "A film about an emotionally damaged man who struggles with his past while at the same time trying to provide for his family.",
     genre: { Name: "Drama" },
     director: "Denzel Washington",
     actors:
