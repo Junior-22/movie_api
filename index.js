@@ -7,6 +7,17 @@ const bodyParser = require("body-parser"),
   uuid = require("uuid"),
   methodOverride = require("method-override");
 
+const mongoose = require("mongoose");
+const Models = require("./models.js");
+
+const Movies = Models.Movie;
+const Users = Models.User;
+
+mongoose.connect("mongodb://localhost27017/movieDB", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
 app.use(morgan("common"));
 app.use(
   bodyParser.urlencoded({
@@ -138,75 +149,168 @@ app.get("/", (req, res) => {
 app.get("/documentation", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
+
 //Return a list of ALL movies to the user
 app.get("/movies", (req, res) => {
-  res.status(200).json(movies);
+  Movies.find()
+    .then(movies => {
+      res.status(200).json(movies);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
+
 // Return movie by title
 app.get("/movies/:title", (req, res) => {
-  const title = req.params.title;
-  const movie = movies.find(movie => movie.title === title);
-
-  if (movie) {
-    res.status(200).json(movie);
-  } else {
-    res.status(400).send("movie not found");
-  }
+  Movies.findOne({ Title: req.params.Title })
+    .then(movie => {
+      res.status(200).json(movie);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
+
 // Return movie by genre
 app.get("/movies/genre/:genreName", (req, res) => {
-  const genreName = req.params.genreName;
-  const genre = movies.find(movie => movie.genre.Name === genreName);
-
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send("no such genre");
-  }
+  Movies.findOne({ "Genre.Name": req.params.Name })
+    .then(movie => {
+      res.status(200).json(movie.Genre);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(400).send("Error: " + err);
+    });
 });
+
 // Return movie by director
 app.get("/movies/director/:directorName", (req, res) => {
-  const directorName = req.params.directorName;
-  const director = movies.find(movie => movie.director === directorName);
-
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(400).send("director not found");
-  }
+  Movies.findOne({ "Director.Name": req.params.Name })
+    .then(movie => {
+      res.status(200).json(movie.Director);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(400).send("Error: " + err);
+    });
 });
+
 // Allow new users to register
 app.post("/users/register", (req, res) => {
-  res.status(201).send("account created");
+  Users.findOne({ Username: req.body.Username })
+    .then(user => {
+      if (user) {
+        return res.status(400).send(req.body.Username + "already exists");
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        })
+          .then(user => {
+            res.status(201).json(user);
+          })
+          .catch(error => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
-// Allow users to update their user info (username)
+
+// update user info (username)
 app.put("/users/:userName", (req, res) => {
-  res.status(200).send("account updated");
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday
+      }
+    }
+  ),
+    { new: true }, // makes sure that the updated document is returned
+    (err, updateUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updateUser);
+      }
+    };
 });
-// Allow existing users to deregister
+
+// deregister account
 app.delete("/users/:userName", (req, res) => {
-  res.status(200).send("account deleted");
-});
-// Allow users to add a movie to their list of favorites
-app.post("/users/:userName/favourites", (req, res) => {
-  res.status(200).send("movie added to favourites");
-});
-// Allow users to remove a movie from their list of favorites
-app.delete("/users/:userName/favourites", (req, res) => {
-  res.status(200).send("movie removed from favourites");
-});
-
-// morgan requests
-app.get("/", (req, res) => {
-  res.send("Welcome");
+  Users.findOneAndRemove({ Username: req.params.Username })
+    .then(user => {
+      if (!user) {
+        res.status(400).send(req.params.Username + "not found");
+      } else {
+        res.status(200).send(req.params.Username + "account deleted");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.get("/secreturl", (req, res) => {
-  res.send("This url contains secret content");
+// add movie to list of favorites
+app.post("/users/:userName/movies/:MovieID", (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    { $push: { FavouriteMovies: req.params.MovieID } }
+  ),
+    { new: true },
+    (err, updateUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updateUser);
+      }
+    };
 });
 
-// return static file
-app.use(express.static("public"));
+// remove movie from list of favorites
+app.delete("/users/:userName/movies/:MovieID", (req, res) => {
+  Users.findOneAndUpdate(
+    { Username: req.params.Username },
+    { $pull: { FavouriteMovies: req.params.MovieID } }
+  ),
+    { new: true },
+    (err, updateUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updateUser);
+      }
+    };
+});
+
+// // morgan requests
+// app.get("/", (req, res) => {
+//   res.send("Welcome");
+// });
+//
+// app.get("/secreturl", (req, res) => {
+//   res.send("This url contains secret content");
+// });
+//
+// // return static file
+// app.use(express.static("public"));
 
 // error handling
 app.use((err, req, res, next) => {
