@@ -10,10 +10,12 @@ const bodyParser = require("body-parser"),
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
+// mongoose models
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect("mongodb://localhost27017/movieDB", {
+// connect to MongoDB
+mongoose.connect("mongodb://127.0.0.1:27017/movieDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -51,7 +53,7 @@ app.get("/movies", (req, res) => {
 
 // Return movie by title
 app.get("/movies/:title", (req, res) => {
-  Movies.findOne({ Title: req.params.Title })
+  Movies.findOne({ Title: req.params.title })
     .then(movie => {
       res.status(200).json(movie);
     })
@@ -85,6 +87,30 @@ app.get("/movies/director/:directorName", (req, res) => {
     });
 });
 
+// return all users
+app.get("/users", (req, res) => {
+  Users.find()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+// return a user
+app.get("/users/:Username", (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then(user => {
+      res.json(user);
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
 // Allow new users to register
 app.post("/users/register", (req, res) => {
   Users.findOne({ Username: req.body.Username })
@@ -114,7 +140,7 @@ app.post("/users/register", (req, res) => {
 });
 
 // update user info (username)
-app.put("/users/:userName", (req, res) => {
+app.put("/users/:Username", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
@@ -127,18 +153,18 @@ app.put("/users/:userName", (req, res) => {
     }
   ),
     { new: true }, // makes sure that the updated document is returned
-    (err, updateUser) => {
+    (err, updatedUser) => {
       if (err) {
         console.error(err);
         res.status(500).send("Error: " + err);
       } else {
-        res.json(updateUser);
+        res.json(updatedUser);
       }
     };
 });
 
 // deregister account
-app.delete("/users/:userName", (req, res) => {
+app.delete("/users/:Username", (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then(user => {
       if (!user) {
@@ -154,35 +180,35 @@ app.delete("/users/:userName", (req, res) => {
 });
 
 // add movie to list of favorites
-app.post("/users/:userName/movies/:MovieID", (req, res) => {
+app.post("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
     { $push: { FavouriteMovies: req.params.MovieID } }
   ),
     { new: true },
-    (err, updateUser) => {
+    (err, updatedUser) => {
       if (err) {
         console.error(err);
         res.status(500).send("Error: " + err);
       } else {
-        res.json(updateUser);
+        res.json(updatedUser);
       }
     };
 });
 
 // remove movie from list of favorites
-app.delete("/users/:userName/movies/:MovieID", (req, res) => {
+app.delete("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
     { $pull: { FavouriteMovies: req.params.MovieID } }
   ),
     { new: true },
-    (err, updateUser) => {
+    (err, updatedUser) => {
       if (err) {
         console.error(err);
         res.status(500).send("Error: " + err);
       } else {
-        res.json(updateUser);
+        res.json(updatedUser);
       }
     };
 });
