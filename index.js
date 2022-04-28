@@ -150,8 +150,7 @@ app.put("/users/:Username", (req, res) => {
         Email: req.body.Email,
         Birthday: req.body.Birthday
       }
-    }
-  ),
+    },
     { new: true }, // makes sure that the updated document is returned
     (err, updatedUser) => {
       if (err) {
@@ -160,7 +159,8 @@ app.put("/users/:Username", (req, res) => {
       } else {
         res.json(updatedUser);
       }
-    };
+    }
+  );
 });
 
 // deregister account
@@ -183,8 +183,8 @@ app.delete("/users/:Username", (req, res) => {
 app.post("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
-    { $push: { FavouriteMovies: req.params.MovieID } }
-  ),
+    { $push: { FavouriteMovies: req.params.MovieID } },
+
     { new: true },
     (err, updatedUser) => {
       if (err) {
@@ -193,15 +193,16 @@ app.post("/users/:Username/movies/:MovieID", (req, res) => {
       } else {
         res.json(updatedUser);
       }
-    };
+    }
+  );
 });
 
 // remove movie from list of favorites
 app.delete("/users/:Username/movies/:MovieID", (req, res) => {
   Users.findOneAndUpdate(
     { Username: req.params.Username },
-    { $pull: { FavouriteMovies: req.params.MovieID } }
-  ),
+    { $pull: { FavouriteMovies: req.params.MovieID } },
+
     { new: true },
     (err, updatedUser) => {
       if (err) {
@@ -210,7 +211,8 @@ app.delete("/users/:Username/movies/:MovieID", (req, res) => {
       } else {
         res.json(updatedUser);
       }
-    };
+    }
+  );
 });
 
 // // morgan requests
