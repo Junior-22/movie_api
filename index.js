@@ -19,8 +19,14 @@ app.use(cors());
 
 const { check, validationResult } = require("express-validator");
 
-// connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/movieDB", {
+// // connect to MongoDB
+// mongoose.connect("mongodb://127.0.0.1:27017/movieDB", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// });
+
+// connect to MongoDB Atlas
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
