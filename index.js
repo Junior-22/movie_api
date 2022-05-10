@@ -314,6 +314,7 @@ app.delete(
 
 // error handling
 app.use((err, req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:1234");
   res.setHeader("Access-Control-Allow-Headers", "*");
   res.header("Access-Control-Allow-Credentials", true);
   console.error(err.stack);
