@@ -314,6 +314,7 @@ app.delete(
 
 // error handling
 app.use((err, req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", true);
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
