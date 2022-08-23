@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// requires bcrypt to hash users passwords when thy register an every time they login
 const bcrypt = require("bcrypt");
 
 let movieSchema = mongoose.Schema({
@@ -33,5 +34,6 @@ userSchema.methods.validatePassword = function(password) {
 let Movie = mongoose.model("Movie", movieSchema);
 let User = mongoose.model("User", userSchema);
 
+// exports the models created above to import them in index.js
 module.exports.Movie = Movie;
 module.exports.User = User;

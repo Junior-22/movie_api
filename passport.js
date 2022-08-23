@@ -7,6 +7,7 @@ let Users = Models.User,
   JWTStrategy = passportJWT.Strategy,
   ExtractJWT = passportJWT.ExtractJwt;
 
+// recognise a user
 passport.use(
   new LocalStrategy(
     {
@@ -40,6 +41,7 @@ passport.use(
   )
 );
 
+// apply token for user
 passport.use(
   new JWTStrategy(
     {

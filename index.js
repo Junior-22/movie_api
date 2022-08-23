@@ -7,6 +7,7 @@ const bodyParser = require("body-parser"),
   uuid = require("uuid"),
   methodOverride = require("method-override");
 
+// requires the Mongoose package and the Mongoose Models created in models.js
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
@@ -17,6 +18,7 @@ const Users = Models.User;
 const cors = require("cors");
 app.use(cors());
 
+// requires express validator to validate user input on the server side
 const { check, validationResult } = require("express-validator");
 
 // // connect to MongoDB
@@ -38,14 +40,21 @@ app.use(
   })
 );
 
+// import the auth.js file into the project
 let auth = require("./auth")(app);
+
+// requires the Passport module and imports passport.js
 const passport = require("passport");
 require("./passport");
 
 app.use(bodyParser.json());
 app.use(methodOverride());
 
-// GET requests
+/**
+ * redirects route to index.html
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get("/", (req, res) => {
   res.send("Hi there, welcome to my movie app!");
 });
@@ -54,7 +63,14 @@ app.get("/documentation", (req, res) => {
   res.sendFile("public/documentation.html", { root: __dirname });
 });
 
-//Return a list of ALL movies to the user
+/**
+ * Return a list of ALL movies to the user
+ * /movies end-point
+ * method: get
+ * get all movies
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get(
   "/movies",
   passport.authenticate("jwt", { session: false }),
@@ -70,7 +86,14 @@ app.get(
   }
 );
 
-// Return movie by title
+/**
+ * Return movie by title
+ * /movies/:title end-point
+ * method: gt
+ * movies by title
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get(
   "/movies/:title",
   passport.authenticate("jwt", { session: false }),
@@ -86,7 +109,14 @@ app.get(
   }
 );
 
-// Return movie by genre
+/**
+ * Return movie by genre
+ * //movies/genre/:genreName end-point
+ * method: get
+ * get description of a genre by name
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get(
   "/movies/genre/:genreName",
   passport.authenticate("jwt", { session: false }),
@@ -102,7 +132,14 @@ app.get(
   }
 );
 
-// Return movie by director
+/**
+ * Return movie by director
+ * /movies/director/:directorName end-point
+ * method: get
+ * director by name
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get(
   "/movies/director/:directorName",
   passport.authenticate("jwt", { session: false }),
@@ -118,7 +155,14 @@ app.get(
   }
 );
 
-// return all users
+/**
+ * Return all users
+ * /users end-point
+ * method: get
+ * get all user profiles
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get("/users", (req, res) => {
   Users.find()
     .then(users => {
@@ -130,7 +174,14 @@ app.get("/users", (req, res) => {
     });
 });
 
-// return a user
+/**
+ * Return a user
+ * /users/:Username end-point
+ * method: get
+ * get user by username
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.get("/users/:Username", (req, res) => {
   Users.findOne({ Username: req.params.Username })
     .then(user => {
@@ -142,7 +193,23 @@ app.get("/users/:Username", (req, res) => {
     });
 });
 
-// Allow new users to register
+/**
+ * Allow new users to register
+ * /users/register end-point
+ * method: post
+ * register user profile
+ * expects Username, Password, Email, Birthday
+ * @param {express.request} req
+ * @param {express.response} re
+ */
+/* We’ll expect JSON in this format
+{
+  ID: Integer,
+  Username: String,
+  Password: String,
+  Email: String,
+  Birthday: Date
+}*/
 app.post(
   "/users/register",
   // validation logic
@@ -165,21 +232,28 @@ app.post(
       return res.status(422).json({ errors: errors.array() });
     }
 
+    // hashes any password entered by the user when registering before storing it in the MongoDB database
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
       .then(user => {
+        // if user already exists, this message will be returned
         if (user) {
           return res.status(400).send(req.body.Username + "already exists");
         } else {
+          // if user does not exist, it will create a new user document in Users collection
           Users.create({
             Username: req.body.Username,
             Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
           })
+            // this callback takes the created document as a parameter, in this case named user.
+            // it will give the client feddback on the transaction, letting them know that it's been completed
             .then(user => {
               res.status(201).json(user);
             })
+            // catch() function that will catch any problems that
+            //Mongoose encounters while running the create commmand
             .catch(error => {
               console.error(error);
               res.status(500).send("Error: " + error);
@@ -193,7 +267,14 @@ app.post(
   }
 );
 
-// update user info (username)
+/**
+ * update user info
+ * /users/:Username end-point
+ * method: put
+ * update user's profile
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.put(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -240,7 +321,14 @@ app.put(
   }
 );
 
-// deregister account
+/**
+ * deregister account
+ * /users/:Username end-point
+ * method: delete
+ * delete user's profile
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.delete(
   "/users/:Username",
   passport.authenticate("jwt", { session: false }),
@@ -260,7 +348,14 @@ app.delete(
   }
 );
 
-// add movie to list of favorites
+/**
+ * add movie to list of favorites
+ * /users/:Username/movies/:MovieID end-point
+ * method: post
+ * add movie to user's favorites
+ * @param {express.request} req
+ * @param {express.response} res
+ */
 app.post(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -282,7 +377,14 @@ app.post(
   }
 );
 
-// remove movie from list of favorites
+/**
+ * remove movie from list of favorites
+ * /users/:Username/movies/:MovieID end-point
+ * method: delete
+ * delete a movie from user's favorites
+ * @param {express.request} req
+ * @param {express.response} re
+ */
 app.delete(
   "/users/:Username/movies/:MovieID",
   passport.authenticate("jwt", { session: false }),
@@ -316,7 +418,7 @@ app.delete(
 // // return static file
 // app.use(express.static("public"));
 
-// error handling
+// Error-handling middleware function that will log all application-level errors to the terminal
 app.use((err, req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:1234");
   res.setHeader("Access-Control-Allow-Headers", "*");
@@ -325,7 +427,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-// listen for requests
+// Server listens to Port 8080. For HTTP Port 80 is the default Port
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log("My app is listening on port " + port);
